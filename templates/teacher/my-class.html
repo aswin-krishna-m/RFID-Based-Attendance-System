@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}My class{% endblock title %}
+{% block headerBlock %}
+<style>
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .menu-container {
+        margin: 0 30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px; /* Adjust the space between the buttons */
+        margin-top: 10px;
+    }
+    
+    .menu-item {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .btn-menu {
+        
+        display: block;
+        width: 100%;
+        padding: 20px;
+        font-size: 20px;
+        background-color: #3498db;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    
+    .btn-menu:hover {
+        background-color: #2980b9;
+    }
+     #main {
+        width: 80%;
+        overflow-x: hidden;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+
+<div id="wrapper">
+    {% include "teacher/sidebar.html" %}
+    <div id="main" style="margin-top: 100px;">
+    <div class="visible-md visible-xs visible-sm mobile-menu">
+        <button type="button" class="btn btn-default btn-sm" data-toggle="offcanvas">
+            <i class="fa fa-bars"></i>
+        </button>
+    </div>
+
+<!-- Container for the buttons -->
+<h1 style="text-align: center;">My Class</h1>
+    <div class="menu-container">
+        <div class="menu-item">
+            <!-- Existing View Students button -->
+            <a href="{% url 'teacherMyClassStudentList' class_info.id %}" class="btn btn-menu">View Students</a>
+        </div>
+
+        <div class="menu-item">
+            <!-- My Subjects button -->
+            <a href="{% url 'teacherSetUpSem' class_info.id  %}" class="btn btn-menu">Setup Semester</a>
+        </div>
+    </div>
+    <div class="menu-container">
+        <div class="menu-item">
+            <!-- My Subjects button -->
+            <a href="{% url 'teacherMyClassStudentReqList' class_info.id %}" class="btn btn-menu">Student Requests - {{count}}</a>
+        </div>
+        <div class="menu-item">
+            <!-- Existing View Students button -->
+            <a href="{% url 'teacherMySubList' class_info.course_id.id %}" class="btn btn-menu">All Subjects</a>
+        </div>
+        <div class="menu-item">
+            <!-- Existing View Students button -->
+            <a href="{% url 'teacherClassInfo' class_info.id %}" class="btn btn-menu">Class Settings</a>
+        </div>
+
+    </div>
+</div>
+</div>
+{% endblock bodyContent %}

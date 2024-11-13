@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+  Student Register
+{% endblock title %}
+{% block bodyClass %}
+class="login"
+{% endblock bodyClass %}
+{% block bodyContent %}
+
+<div id="wrapper" >
+  {% include "navbar.html" %}
+<div class="container" >
+<div class="row login-wrapper" style="margin-top: 3px; padding-top:0;">
+  <div class="col-md-6 col-md-offset-3">
+    
+<div class="panel panel-login">
+<div class="panel-body">
+  <div class="row">
+    <div class="col-lg-12">
+      <form id="stud-register-form" action="" method="post" role="form">
+        {% csrf_token %}
+        <div class="logo logo-center">
+          <a href="#"><img src='{% static "images/logo.png" %}' alt=""></a>
+        </div>
+        <h2 style="text-align: center; font-weight: bold;">Student Registration</h2>
+        <div class="form-group">
+          <input type="text" name="fname" id="fname" tabindex="1" class="form-control" placeholder="First name" value="" required>
+        </div>
+        <div class="form-group">
+          <input type="text" name="lname" id="lname" tabindex="1" class="form-control" placeholder="Last name" value="" required>
+        </div>
+        <div class="form-group">
+          <input type="date" name="dob" id="dob" tabindex="1" class="form-control" placeholder="DOB" value="" required>
+        </div>
+        <div class="form-group">
+          <select name="gender"  class="form-control" id="gender" required >
+            <option value="" selected disabled hidden>Select Gender</option>
+                <option value="MALE">MALE</option>
+                <option value="FEMALE">FEMALE</option>
+                <option value="OTHER">OTHER</option>
+        </select>
+        </div>
+        <div class="form-group">
+          <select name="course"  class="form-control" id="course" required >
+              <option value="" selected disabled hidden>Select Course</option>
+              {% for course in course_list %}
+                  <option value="{{course.id}}">{{course}}</option>
+              {% endfor %}
+          </select>
+      </div>
+      <div class="form-group">
+        <select name="class"  class="form-control" id="class" required >
+            <option value="" selected disabled hidden>Select Class</option>
+            {% for class in class_list %}
+                <option value="{{class.id}}">{{class}}</option>
+            {% endfor %}
+        </select>
+    </div> 
+        <div class="form-group">
+          <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email" value="" required>
+        </div>
+        <div class="form-group">
+          <input type="text" name="phone" id="phone" maxlength="10" tabindex="1" pattern="[0-9]{10}" title="Ten Digit Phone Number" class="form-control" placeholder="Phone Number" value="" required>
+        </div>
+        <div class="form-group">
+      <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password" required>
+      </div>
+        <div class="form-group">
+      <input type="password" name="cpassword" id="cpassword" tabindex="2" class="form-control" placeholder="Confirm-Password" required>
+      </div>
+      <div id="passwordMatchMessage" style="color: red; display: none;">Passwords do not match!</div>
+      <div class="form-group">
+      <div class="row">
+      <div class="col-sm-12">
+      <button type="submit" class="form-control btn btn-default">Submit</button>
+      </div>
+      </div>
+      </div>
+      <div class="form-group">
+      <div class="row">
+      <div class="col-lg-12">
+      <div class="text-center">
+      <a href="{% url 'studentLogin' %}" tabindex="5" class="">Login Here</a>
+      </div>
+      </div>
+      </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Wait until the document is fully loaded
+  document.addEventListener('DOMContentLoaded', function () {
+    // Get references to the course and class select elements
+    const courseSelect = document.getElementById('course');
+    const classSelect = document.getElementById('class');
+
+    // Initially disable the class select
+    classSelect.disabled = true;
+
+    // Add an event listener to the course select
+    courseSelect.addEventListener('change', function () {
+        // If a valid course is selected, enable the class select
+        if (courseSelect.value) {
+            classSelect.disabled = false;
+
+            // Fetch the classes for the selected course
+            const courseId = courseSelect.value;
+            fetch(`/studentGetClass/${courseId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Clear the existing options
+                    classSelect.innerHTML = '<option value="" selected disabled hidden>Select Class</option>';
+
+                    // Populate the classes dynamically
+                    data.forEach(classObj => {
+                        const option = document.createElement('option');
+                        option.value = classObj.id;
+                        option.textContent = `S${classObj.sem_number} - ${classObj.course_id__short_name} - ${classObj.division_name}`;
+                        classSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching classes:', error);
+                });
+        } else {
+            // Disable and clear the class select if no course is selected
+            classSelect.disabled = true;
+            classSelect.innerHTML = '<option value="" selected disabled hidden>Select Class</option>';
+        }
+    });
+});
+  document.getElementById('stud-register-form').addEventListener('keyup', function (e) {
+    var newPassword = document.getElementById('password').value;
+    var confirmPassword = document.getElementById('cpassword').value;
+
+    if (newPassword !== confirmPassword) {
+        e.preventDefault();
+        document.getElementById('passwordMatchMessage').style.display = 'block';
+      }else{
+      document.getElementById('passwordMatchMessage').style.display = 'none';
+    }
+});
+</script>
+{% include "footer.html" %}
+{% endblock bodyContent %}

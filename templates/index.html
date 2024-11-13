@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}
+  Home
+{% endblock title %}
+{% block bodyClass %}
+class="login"
+{% endblock bodyClass %}
+{% block bodyContent %}
+
+
+<div id="wrapper">
+   {% include "navbar.html" %}
+    <section class="slider-section">
+    <div class="tp-banner-container">
+    <div class="tp-banner">
+    <ul>
+    <li data-transition="fade" data-slotamount="1" data-masterspeed="500" data-thumb="upload/slider_new_03.jpg.pagespeed.ic.0dDeZb1yS7.jpg' %}" data-saveperformance="off" data-title="Slide">
+    <img src="{% static 'upload/xslider_new_03.jpg.pagespeed.ic.0dDeZb1yS7.jpg' %}" alt="fullslide1" data-bgposition="center top" data-bgfit="cover" data-bgrepeat="no-repeat">
+    <div class="tp-caption slider_layer_05 text-center lft tp-resizeme" data-x="center" data-y="140" data-speed="1000" data-start="600" data-easing="Power3.easeInOut" data-splitin="none" data-splitout="none" data-elementdelay="0.1" data-endelementdelay="0.1" data-endspeed="1000" style=" background-color:brown; z-index: 9; max-width: auto; max-height: auto; white-space: nowrap;"><img src="{% static 'images/logo.png' %}" width="100%"  alt="">
+    </div>
+    <div class="tp-caption slider_layer_01 text-center lft tp-resizeme" data-x="center" data-y="250" data-speed="1000" data-start="600" data-easing="Power3.easeInOut" data-splitin="none" data-splitout="none" data-elementdelay="0.1" data-endelementdelay="0.1" data-endspeed="1000" style="z-index: 9; max-width: auto; max-height: auto; white-space: nowrap;">Attendance Management System
+    </div>
+    <div class="tp-caption slider_layer_02 text-center lft tp-resizeme" data-x="center" data-y="360" data-speed="1000" data-start="800" data-easing="Power3.easeInOut" data-splitin="none" data-splitout="none" data-elementdelay="0.1" data-endelementdelay="0.1" data-endspeed="1000" style="z-index: 9; max-width: auto; max-height: auto; white-space: nowrap;">Great choice for College Attendance organizing<br> with tons of options!
+    </div>
+    <div class="tp-caption text-center lft tp-resizeme" data-x="center" data-y="440" data-speed="1000" data-start="800" data-easing="Power3.easeInOut" data-splitin="none" data-splitout="none" data-elementdelay="0.1" data-endelementdelay="0.1" data-endspeed="1000" style="z-index: 9; max-width: auto; max-height: auto; white-space: nowrap;">
+         <!-- <a target="_blank" href="#" class="btn btn-primary">Purchase Now</a>
+          <a target="_blank" href="#" class="btn btn-default">Read More About</a> -->
+    </div>
+    </li>
+    <li data-transition="fade" data-slotamount="1" data-masterspeed="500" data-thumb="upload/slider_new_02.jpg.pagespeed.ic.QHr4wT-HDB.jpg' %}" data-saveperformance="off" data-title="Slide">
+    <img src="{% static 'upload/xslider_new_02.jpg.pagespeed.ic.QHr4wT-HDB.jpg' %}" alt="fullslide1" data-bgposition="center top" data-bgfit="cover" data-bgrepeat="no-repeat">
+    <div class="tp-caption slider_layer_04 text-center lft tp-resizeme" data-x="center" data-y="200" data-speed="1000" data-start="600" data-easing="Power3.easeInOut" data-splitin="none" data-splitout="none" data-elementdelay="0.1" data-endelementdelay="0.1" data-endspeed="1000" style="z-index: 9; max-width: auto; max-height: auto; white-space: nowrap;"><strong>Welome back user!</strong>
+    </div>
+    <div class="tp-caption text-center lft tp-resizeme" data-x="center" data-y="410" data-speed="1000" data-start="800" data-easing="Power3.easeInOut" data-splitin="none" data-splitout="none" data-elementdelay="0.1" data-endelementdelay="0.1" data-endspeed="1000" style="z-index: 9; max-width: auto; max-height: auto; white-space: nowrap;">
+        <a href="{% url 'studentLogin' %}" class="btn btn-default">Login as Student</a>
+        <a href="{% url 'teacherLogin' %}" class="btn btn-default">Login as Teacher</a>
+    </div>
+    </li>
+    <li data-transition="fade" data-slotamount="1" data-masterspeed="500" data-thumb="upload/slider_new_01.jpg.pagespeed.ic.RgCY2ieSzC.jpg' %}" data-saveperformance="off" data-title="Slide">
+    <img src="{% static 'upload/xslider_new_01.jpg.pagespeed.ic.RgCY2ieSzC.jpg' %}" alt="fullslide1" data-bgposition="center top" data-bgfit="cover" data-bgrepeat="no-repeat">
+    <div class="tp-caption slider_layer_01 text-center lft tp-resizeme" data-x="center" data-y="220" data-speed="1000" data-start="600" data-easing="Power3.easeInOut" data-splitin="none" data-splitout="none" data-elementdelay="0.1" data-endelementdelay="0.1" data-endspeed="1000" style="z-index: 9; max-width: auto; max-height: auto; white-space: nowrap;"><img src="{% static 'images/logo.png' %}" width="20%"  alt="">
+    </div>
+    <div class="tp-caption slider_layer_02 text-center lft tp-resizeme" data-x="center" data-y="320" data-speed="1000" data-start="800" data-easing="Power3.easeInOut" data-splitin="none" data-splitout="none" data-elementdelay="0.1" data-endelementdelay="0.1" data-endspeed="1000" style="z-index: 9; max-width: auto; max-height: auto; white-space: nowrap;">Start your journey here with us!!
+    </div>
+    <div class="tp-caption text-center lft tp-resizeme" data-x="center" data-y="390" data-speed="1000" data-start="800" data-easing="Power3.easeInOut" data-splitin="none" data-splitout="none" data-elementdelay="0.1" data-endelementdelay="0.1" data-endspeed="1000" style="z-index: 9; max-width: auto; max-height: auto; white-space: nowrap;">
+        <a href="{% url 'studentRegister' %}" class="btn btn-default">Start as Student</a>
+        <a href="{% url 'teacherRegister' %}" class="btn btn-default">Start as Teacher</a>
+    </div>
+    </li>
+    </ul>
+    </div>
+    </div>
+    </section>
+    </div>
+{% endblock bodyContent %}

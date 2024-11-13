@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Teacher List{% endblock title %}
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    td {
+        color: #333;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+{% include "myAdmin/navbar.html" %}
+<section class="section">
+    <div class="container-table">
+        <a class="btn btn-primary" href="{% url 'adminTeacherReqList' %}">Requests <span class="badge badge-danger">{{req_count}}</span></a>
+        {% if teacher_list %}
+        <h1>Teacher List</h1>
+        <table>
+            <thead>
+                <tr>
+                    
+                    <th>Sl</th>
+                    <th>Full Name</th>
+                    <th>Department</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for teacher in teacher_list %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td>{{ teacher.fname }} {{ teacher.lname }}</td>
+                    <td style="width: 200px">{{ teacher.department_id }}</td>
+                    <td><a style="margin: 5px;" href="{% url 'adminTeacherInfo' teacher.id %}" class="btn btn-primary col-md-5">View</a>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="id" value="{{teacher.id}}">
+                        <button style="margin: 5px;"  type="submit" onclick="return confirm('Remove {{teacher.fname}} {{ teacher.lname }}?');"" class="col-md-5 btn btn-danger">Delete</button>
+                    </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <h1 style="color: red; font-size: 30px; text-align: center;">No verified teachers added</h1>
+        {% endif %}
+    </div>
+</section>
+{% include "footer.html" %}
+{% endblock bodyContent %}
+
+

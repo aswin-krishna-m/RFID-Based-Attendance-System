@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load static %}
+{% load attendance_filters %}
+{% block title %}Mark attendance{% endblock title %}
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    td {
+        color: #333;
+    }
+    #main {
+        width: 80%;
+        overflow-x: hidden;
+    }
+    .actions {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    .actions button {
+        padding: 10px 15px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .actions button:hover {
+        background-color: #0056b3;
+    }
+    .submit-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        padding: 10px 15px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .submit-btn:hover {
+        background-color: #218838;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+
+<div id="wrapper">
+    {% include "teacher/sidebar.html" %}
+    <div id="main">
+        <div class="visible-md visible-xs visible-sm mobile-menu">
+            <button type="button" class="btn btn-default btn-sm" data-toggle="offcanvas">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        <section class="section">
+        <div class="container-table">
+            <form method="POST" action="">
+                {% csrf_token %}
+                
+                {% if student_list %}
+                <div class="actions">
+                    <button type="button" id="toggleAttendance">Mark All Present</button>
+                
+                    <a href="{% url 'teacherAttendanceStud' class_id sub_id %}" id="toggleAttendance">View Attendance%</a>
+                </div>
+
+                <h1>Attendance List</h1>
+        
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sl</th>
+                            <th>Full Name</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in student_list %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ student.fname }} {{ student.lname }}</td>
+                            <td>
+                                <input type="checkbox" class="attendance-checkbox" id="attendance_{{ student.id }}" name="attendance_{{ student.id }}" value="present"
+                                {% if attendance_status_dict|attendance_status:student.id %} checked {% endif %}>
+                                {% if attendance_status_dict|attendance_status:student.id %}
+                                <label for="attendance_{{ student.id }}" class="attendance-label">Present</label>
+                                
+                                {% else %}
+                                <label for="attendance_{{ student.id }}" class="attendance-label">Absent</label>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- Submit button -->
+                <button type="submit" class="submit-btn">Update attendance</button>
+                
+                {% else %}
+                <h1 style="color: red; font-size: 30px; text-align: center;">No Students Verified</h1>
+                {% endif %}
+            </form>
+        </div>
+        </section>
+    </div>
+</div>
+
+<script>
+    // JavaScript to handle checkbox label updates and toggling
+    function updateLabel(checkbox) {
+        const label = document.querySelector(`label[for='${checkbox.id}']`);
+        label.textContent = checkbox.checked ? "Present" : "Absent";
+    }
+
+    document.querySelectorAll('.attendance-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            updateLabel(checkbox);
+        });
+    });
+
+    function areAllChecked() {
+        const checkboxes = document.querySelectorAll('.attendance-checkbox');
+        return Array.from(checkboxes).every(checkbox => checkbox.checked);
+    }
+
+    document.getElementById('toggleAttendance').addEventListener('click', function() {
+        const checkboxes = document.querySelectorAll('.attendance-checkbox');
+        const markAllPresent = !areAllChecked();
+
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = markAllPresent;
+            updateLabel(checkbox);
+        });
+
+        this.textContent = markAllPresent ? "Mark All Absent" : "Mark All Present";
+    });
+</script>
+
+{% endblock bodyContent %}

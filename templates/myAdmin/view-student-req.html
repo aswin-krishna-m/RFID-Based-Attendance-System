@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Student Info{% endblock title %}
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    td {
+        color: #333;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+{% include "myAdmin/navbar.html" %}
+<section class="section">
+    <div class="container-table">
+        <a class="btn btn-primary" href="{% url 'adminStudentReqList' %}">Back</a>
+
+        <h1 id="title">Student Info</h1>
+        <div id="info-table">
+            <table >
+                <tr>
+                    <th>Full Name</th>
+                    <td>{{ student.fname }} {{ student.lname }}</td>
+                </tr>
+                <tr>
+                    <th>Gender</th>
+                    <td>{{ student.gender }}</td>
+                </tr>
+                <tr>
+                    <th>DOB</th>
+                    <td> {{ student.dob|date:'F d, Y' }}</td>
+                </tr>
+                <tr>
+                    <th>Course</th>
+                    <td>{{ student.course_id }} ({{ student.course_id.short_name }})</td>
+                </tr>
+                <tr>
+                    <th>Class</th>
+                    <td>{% if student.class_id %}
+                        {{ student.class_id }}
+                        {% else %}
+                        Not Assigned to any class
+                    {% endif %}</td>
+                </tr>
+                <tr>
+                        <th>Email</th>
+                    <td>{{student.email }}</td>
+                </tr>
+                <tr>
+                    <th>Phone</th>
+                    <td>{{student.phone }}</td>
+                </tr>
+                <tr>
+                    <th>Password</th>
+                    <td>{{student.password }}</td>
+                </tr>
+                <tr>
+                    <th>Created on</th>
+                    <td>{{student.created_on }}</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        {% if student.stts %}
+                            Verified
+                        {% else %}
+                        Unverified
+                        {% endif %}
+                    </td>
+                </tr> 
+            <tr>
+                <th>Action</th>
+                <td>
+                    <form method="post">
+                        {% csrf_token %}
+                        {% if student.stts %}
+                        <input type="hidden" name="stts" value="0">
+                        <button style="margin: 5px;"  type="submit"" class="col-md-3 btn btn-danger">Unverify</button>
+                        {% else %}
+                        <input type="hidden" name="stts" value="1">
+                        <button style="margin: 5px;"  type="submit"" class="col-md-3 btn btn-danger">Verify</button>
+                        {% endif %}            
+                    </form>
+            </td>
+            </tr>
+        </table>
+    </div>
+    </div></section>
+{% include "footer.html" %}
+{% endblock bodyContent %}

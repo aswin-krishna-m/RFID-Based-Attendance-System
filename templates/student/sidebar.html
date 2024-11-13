@@ -1,0 +1,12 @@
+{% load static %}
+<div class="row-offcanvas row-offcanvas-left">
+    <div id="sidebar-fix" class="sidebar-offcanvas">
+    <div class="side-logo clearfix">
+    <a href="{% url 'studentHome' %}"><img src="{% static 'images/logo.png' %}" style="height: auto; width: 125px;" alt=""></a>
+    </div>
+    <ul class="sidebar-nav clearfix">
+    <li class="active"><a href="{% url 'studentHome' %}">Home</a></li>
+    <li><a href="{% url 'studentProfile' %}">My Profile</a></li>
+    <li><a href="{% url 'studentLogout' %}">Logout</a></li>
+    </ul>
+</div>

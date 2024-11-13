@@ -1,0 +1,51 @@
+{% load static %}
+<header class="header">
+    <div class="container">
+        <div class="hovermenu ttmenu">
+            <div class="navbar navbar-default" role="navigation">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target=".navbar-collapse">
+                        <span class="sr-only"></span>
+                        <span class="fa fa-bars"></span>
+                    </button>
+                    <div class="logo">
+                <a class="navbar-brand" href="{% url 'adminHome' %}" ><img src="{% static 'images/logo.png' %}" style="height: auto; width: 125px;" alt=""></a>
+            </div>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="ttmenu-half"><a href="{% url 'index' %}" >Home</a></li>
+                        <!-- <li class="ttmenu-half"><a href="page-about.html">About</a></li>
+                        <li class="ttmenu-half"><a href="page-contact.html">Contact</a></li> -->
+                        <li class="dropdown ttmenu-half"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Login <b class="fa fa-angle-down"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <div class="ttmenu-content">
+                                        <ul>
+                                            <li><a href="{% url 'teacherLogin' %}"> Teacher </a></li>
+                                            <li><a href="{% url 'studentLogin' %}"> Student </a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown ttmenu-half"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Register <b class="fa fa-angle-down"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <div class="ttmenu-content">
+                                        <ul>
+                                            <li><a href="{% url 'teacherRegister' %}"> Teacher </a></li>
+                                            <li><a href="{% url 'studentRegister' %}"> Student </a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="ttmenu-half"><a href="{% url 'adminLogin' %}">Admin Login</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

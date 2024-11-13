@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Sub List{% endblock title %}
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    td {
+        color: #333;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+{% include "myAdmin/navbar.html" %}
+<section class="section">
+    <div class="container-table">
+        <h2 style="text-align: center; font-weight: bold;">SUBJECT LIST</h2>
+        <form  action="{% url 'adminSubList' %}" method="post" role="form">
+            {% csrf_token %}
+            <div class="form-group col-md-3">
+                <select name="course"  class="form-control" id="course" required >
+                    <option  value="" selected disabled hidden>Select Course</option>
+                    {% for course in course_list %}
+                        <option  data-sem-count="{{course.sem_count}}" value="{{course.id}}">{{course}}</option>
+                    {% endfor %}
+                </select>
+            </div>         
+            <div class="form-group col-md-2">
+              <input type="text" name="title" id="title" tabindex="1" class="form-control" placeholder="Title" value="" required>
+            </div>   
+            <div class="form-group col-md-2" id="divForm">
+              <input type="text" maxlength="10" name="code" id="code" tabindex="1" class="form-control" placeholder="Code" value="" required>
+            </div>    
+          <div class="form-group">
+            <div class="row">
+                <div class=" col-md-2">
+                <button type="submit" class="form-control btn btn-default">Add Subject</button>
+                </div>
+            </div>
+          </div>
+          </form>
+        {% if sub_list %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Code</th>
+                    <th>Course</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub in sub_list %}
+                <tr>
+                    <td>{{ sub.sub_title }}</td>
+                    <td>{{ sub.code }}</td>
+                    <td>{{ sub.course_id.short_name }}</td>
+                    <td style="width: 20%"><a href="{% url 'adminSubInfo' sub.id %}" class="btn btn-primary">View</a>
+                        <a class="btn btn-danger"  href="{% url 'adminSubDel' sub.id %}" onclick="return confirm('Remove {{sub}}?');">Remove</a>
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <h1 style="color: red; font-size: 30px; text-align: center;">No Subjects added Yet</h1>
+        {% endif %}
+    </div>
+</section>
+<script>
+    document.getElementById("course").addEventListener("change", function () { 
+        let selectedOption = this.options[this.selectedIndex];
+        let semCount = selectedOption.getAttribute('data-sem-count');
+        document.getElementById("sem").setAttribute('max', semCount);
+    });
+</script>
+{% include "footer.html" %}
+{% endblock bodyContent %}
+
+

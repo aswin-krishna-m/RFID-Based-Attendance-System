@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}My Subjects{% endblock title %}
+
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .calendar-container {
+        text-align: center;
+    }
+
+    .calendar {
+        width: 100%;
+        display: inline-block;
+    }
+
+    .calendar table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .calendar th, .calendar td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: center;
+    }
+
+    .calendar th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .calendar td {
+        cursor: pointer;
+        background-color: #f9f9f9;
+    }
+
+    .calendar td:hover {
+        background-color: #eee;
+    }
+
+    .calendar .disabled {
+        cursor: not-allowed;
+        background-color: #f5f5f5;
+        color: #ccc;
+    }
+
+    .calendar .sunday {
+        background-color: #fdd;
+        cursor: not-allowed;
+    }
+    .calendar .saturday {
+        background-color: #fdd;
+        cursor: not-allowed;
+    }
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .arrow {
+        cursor: pointer;
+        font-size: 24px;
+        user-select: none;
+    }
+</style>
+{% endblock headerBlock %}
+
+{% block bodyContent %}
+<div id="wrapper">
+    {% include "teacher/sidebar.html" %}
+    <div id="main">
+        <div class="visible-md visible-xs visible-sm mobile-menu">
+            <button type="button" class="btn btn-default btn-sm" data-toggle="offcanvas">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        <section class="section" style="margin-left: 20px;">
+            <div class="container-table">
+                {% if ttc_info %}
+                <h2 style="text-align: center; font-weight: bold;">CHOOSE A DATE IN CALENDAR</h2>
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <span class="arrow" id="prevMonth">&lt;</span>
+                        <h3 id="currentMonthYear"></h3>
+                        <span class="arrow" id="nextMonth">&gt;</span>
+                    </div>
+                    <div class="calendar">
+                        <table id="calendarTable">
+                            <thead>
+                                <tr>
+                                    <th>Sun</th>
+                                    <th>Mon</th>
+                                    <th>Tue</th>
+                                    <th>Wed</th>
+                                    <th>Thu</th>
+                                    <th>Fri</th>
+                                    <th>Sat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="calendarBody">
+                                <!-- Days will be dynamically generated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <h2 style="text-align: center; font-weight: bold;">No Time Table Added Yet for this class</h2>
+
+            {% endif %}
+        </section>
+    </div>
+</div>
+
+<script>
+   // Get the start and end dates passed from Django
+const startDate = new Date("{{ start_date|date:'Y-m-d' }}");
+const endDate = new Date("{{ end_date|date:'Y-m-d' }}");
+
+let currentMonth = startDate.getMonth();
+let currentYear = startDate.getFullYear();
+
+const calendarBody = document.getElementById('calendarBody');
+const currentMonthYear = document.getElementById('currentMonthYear');
+
+// Function to generate calendar
+function generateCalendar(month, year) {
+    calendarBody.innerHTML = ''; // Clear previous calendar
+    const firstDay = new Date(year, month).getDay(); // Sunday = 0, Monday = 1, etc.
+    const daysInMonth = 32 - new Date(year, month, 32).getDate();
+
+    let date = 1;
+    for (let i = 0; i < 6; i++) { // 6 weeks (rows)
+        let row = document.createElement('tr');
+        for (let j = 0; j < 7; j++) { // 7 days (columns)
+            let cell = document.createElement('td');
+            
+            // Adjust placement of first day of the month
+            if (i === 0 && j < firstDay) {
+                // Empty cells before the first day of the month
+                cell.innerHTML = '';
+            } else if (date > daysInMonth) {
+                // Stop when we've shown all days
+                break;
+            } else {
+                let currentDate = new Date(year, month, date);
+                currentDate.setHours(currentDate.getHours() + 5);
+                currentDate.setMinutes(currentDate.getMinutes() + 30);
+                const formattedDate = currentDate.toISOString().slice(0, 10); // Format date as YYYY-MM-DD
+
+                if (currentDate.getDay() === 0) {
+                    cell.classList.add('sunday'); // Highlight Sundays
+                    cell.innerHTML = date;
+                }
+                else if (currentDate >= startDate && currentDate <= endDate) {
+                    cell.innerHTML = date;
+                    
+                    // Make the entire cell clickable
+                    cell.addEventListener('click', () => {
+                        // Construct the URL with the formatted date appended
+                        const baseUrl = "{% url 'teacherHourSelection' ttc_info.class_id.id ttc_info.sem sub_id '0000-00-00' %}";
+                        const finalUrl = baseUrl.replace('0000-00-00', formattedDate); // Replace placeholder with actual date
+                
+                        window.location.href = finalUrl; // Redirect to the dynamically generated URL
+                    });
+
+                    cell.style.cursor = 'pointer'; // Indicate clickable cells
+                } else {
+                    cell.classList.add('disabled'); // Disable out-of-range dates
+                    cell.innerHTML = date;
+                }
+                date++;
+            }
+            row.appendChild(cell);
+        }
+        calendarBody.appendChild(row);
+    }
+
+    // Update the month and year display
+    currentMonthYear.innerText = `${new Date(year, month).toLocaleString('default', { month: 'long' })} ${year}`;
+}
+
+// Switch to the previous month
+document.getElementById('prevMonth').addEventListener('click', () => {
+    if (currentMonth === 0) {
+        currentMonth = 11;
+        currentYear--;
+    } else {
+        currentMonth--;
+    }
+    generateCalendar(currentMonth, currentYear);
+});
+
+// Switch to the next month
+document.getElementById('nextMonth').addEventListener('click', () => {
+    if (currentMonth === 11) {
+        currentMonth = 0;
+        currentYear++;
+    } else {
+        currentMonth++;
+    }
+    generateCalendar(currentMonth, currentYear);
+});
+
+// Initialize the calendar
+generateCalendar(currentMonth, currentYear);
+
+</script>
+{% endblock bodyContent %}

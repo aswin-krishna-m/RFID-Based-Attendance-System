@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Department List{% endblock title %}
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    td {
+        color: #333;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+{% include "myAdmin/navbar.html" %}
+<section class="section">
+    <div class="container-table">
+        <h2 style="text-align: center; font-weight: bold;">DEPARTMENTS LIST</h2>
+        <!-- id="register-form"   -->  <form  action="{% url 'adminDeptList' %}" method="post" role="form">
+            {% csrf_token %}
+            <div class="form-group col-md-4">
+              <input type="text" name="deptname" id="deptname" tabindex="1" class="form-control" placeholder="Department name" value="" required>
+            </div>         
+            <div class="form-group col-md-2">
+              <input type="text" name="shortname" id="shortname" tabindex="1" class="form-control" placeholder="Short name" maxlength="15" value="" required>
+            </div>         
+          <div class="form-group">
+          <div class="row">
+          <div class=" col-md-2">
+          <button type="submit" class="form-control btn btn-default">Add Department</button>
+          </div>
+          </div>
+          </div>
+          </form>
+        {% if dept_list %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Sl</th>
+                    <th>Department Name</th>
+                    <th>Short Name</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dept in dept_list %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ dept.dept_name }}</td>
+                    <td>{{ dept.short_name }}</td>
+                    <td>
+                        <a class="btn btn-primary" href="{% url 'adminDeptInfo' dept.id %}">View</a>
+                        <a class="btn btn-danger" href="{% url 'adminDeptDel' dept.id %}" onclick="return confirm('Remove {{dept.dept_name}}?');">Remove</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <h1 style="color: red; font-size: 30px; text-align: center;">No Departments Registered Yet</h1>
+        {% endif %}
+    </div>
+</section>
+{% include "footer.html" %}
+{% endblock bodyContent %}

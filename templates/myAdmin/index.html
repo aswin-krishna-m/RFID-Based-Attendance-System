@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Admin Home{% endblock title %}
+{% block headerBlock %}
+<style>
+.container-main {
+    margin-top: 50px;
+}
+
+.combined-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.item-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+    text-align: center;
+}
+
+.counter-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.counter {
+    font-size: 3em;
+    color: #007bff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.label {
+    font-size: 1.2em;
+    color: #555;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.menu-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.btn-menu {
+    display: block;
+    padding: 15px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: medium;
+    transition: background-color 0.3s ease;
+}
+
+.btn-menu:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .item-unit {
+        width: 100%;
+    }
+
+    .combined-container {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock headerBlock %}
+{% block bodyContent %}
+{% include "myAdmin/navbar.html" %}
+<div class="container-main">
+    <div class="combined-container">
+        <div class="item-unit">
+            <div class="counter-item">
+                <div class="label">Total Teachers</div>
+                <div class="counter" id="counter1">0</div>
+            </div>
+            <div class="menu-item">
+                <a href="{% url 'adminTeacherList' %}" class="btn btn-menu">View Teachers</a>
+            </div>
+            
+        </div>
+        <div class="item-unit">
+            <div class="counter-item">
+                <div class="label">Total Students</div>
+                <div class="counter" id="counter2">0</div>
+            </div>
+            <div class="menu-item">
+                <a href="{% url 'adminStudentList' %}" class="btn btn-menu">View Students</a>
+            </div>
+        </div>
+        <div class="item-unit">
+            <div class="counter-item">
+                <div class="label">Total Departments</div>
+                <div class="counter" id="counter3">0</div>
+            </div>
+            <div class="menu-item">
+                <a href="{% url 'adminDeptList' %}" class="btn btn-menu">View Departments</a>
+            </div>
+        </div>
+        <div class="item-unit">
+            <div class="counter-item">
+                <div class="label">Total Courses</div>
+                <div class="counter" id="counter4">0</div>
+            </div>
+            <div class="menu-item">
+                <a href="{% url 'adminCourseList' %}" class="btn btn-menu">View Courses</a>
+            </div>
+        </div>
+        <div class="item-unit">
+            <div class="counter-item">
+                <div class="label">Total Classes</div>
+                <div class="counter" id="counter5">0</div>
+            </div>
+            <div class="menu-item">
+                <a href="{% url 'adminClassList' %}" class="btn btn-menu">View Classes</a>
+            </div>
+        </div>
+        <div class="item-unit">
+            <div class="counter-item">
+                <div class="label">Total Subjects</div>
+                <div class="counter" id="counter6">0</div>
+            </div>
+            <div class="menu-item">
+                <a href="{% url 'adminSubList' %}" class="btn btn-menu">View Subjects</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="margin-bottom: 30px;"></div>
+<script>
+    
+    // Count Users
+    
+     function startCounting(element_id,target, duration,) {
+                const counter = document.getElementById(element_id);
+                let count = 0;
+                const step = target / (duration / 100);
+    
+                function updateCounter() {
+                    count += step;
+                    if (count >= target) {
+                        count = target; 
+                        counter.innerText = Math.floor(count);
+                        return;
+                    }
+                    counter.innerText = Math.floor(count);
+                    setTimeout(updateCounter, 100);
+                }
+    
+                updateCounter();
+            }
+            startCounting('counter1',{{ total_count.teacher }}, 1000);
+            startCounting('counter2',{{ total_count.student }}, 1000);
+            startCounting('counter3',{{ total_count.dept }}, 1000);
+            startCounting('counter4',{{ total_count.course }}, 1000);
+            startCounting('counter5',{{ total_count.class }}, 1000);
+            startCounting('counter6',{{ total_count.sub }}, 1000);
+    </script>
+    {% include "footer.html" %}
+    
+{% endblock bodyContent %}

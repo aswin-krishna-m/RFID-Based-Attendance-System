@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Course List{% endblock title %}
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    td {
+        color: #333;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+{% include "myAdmin/navbar.html" %}
+<section class="section">
+    <div class="container-table">
+        <h2 style="text-align: center; font-weight: bold;">COURSE LIST</h2>
+         <!-- id="register-form"   -->  <form  action="{% url 'adminCourseList' %}" method="post" role="form">
+            {% csrf_token %}
+            <div class="form-group col-md-3">
+                <select name="dept"  class="form-control" id="dept" required >
+                    <option value="" selected disabled hidden>Select Department</option>
+                    {% for dept in dept_list %}
+                        <option value="{{dept.id}}">{{dept}}</option>
+                    {% endfor %}
+                </select>
+            </div>         
+            <div class="form-group col-md-3">
+              <input type="text" name="coursename" id="coursename" tabindex="1" class="form-control" placeholder="Course Title" value="" required>
+            </div>             
+            <div class="form-group col-md-2">
+              <input type="text" name="shortname" id="shortname" tabindex="1" class="form-control" placeholder="Short Title" maxlength="15" value="" required>
+            </div>             
+            <div class="form-group col-md-2">
+              <input type="number" name="semcount" id="semcount" tabindex="1" class="form-control" placeholder="Sem Count" value="" required>
+            </div>         
+          <div class="form-group">
+            <div class="row">
+                <div class=" col-md-2">
+                <button type="submit" class="form-control btn btn-default">Add Course</button>
+                </div>
+            </div>
+          </div>
+          </form>
+        {% if course_list %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Course ID</th>
+                    <th>Course Name</th>
+                    <th>Department</th>
+                    <th>Semester Count</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for course in course_list %}
+                <tr>
+                    <td>{{ course.id}} </td>
+                    <td>{{ course.course_title }}</td>
+                    <td>{{ course.department_id }}</td>
+                    <td>{{ course.sem_count }}</td>
+                    <td>
+                        <a class="btn btn-primary" href="{% url 'adminCourseInfo' course.id %}"">View</a>
+                        <a class="btn btn-danger" href="{% url 'adminCourseDel' course.id %}" onclick="return confirm('Remove {{course.course_title}}?');">Remove</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <h1 style="color: red; font-size: 30px; text-align: center;">No Courses Registered Yet</h1>
+        {% endif %}
+    </div>
+</section>
+{% include "footer.html" %}
+{% endblock bodyContent %}
+
+

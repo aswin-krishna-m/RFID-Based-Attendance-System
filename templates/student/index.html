@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Student's Home{% endblock title %}
+{% block headerBlock %}
+<style>
+    .menu-container {
+        margin: 0 30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px; /* Adjust the space between the buttons */
+        margin-top: 10px;
+    }
+    
+    .menu-item {
+        display: flex;
+        justify-content: center;
+    }
+    
+    .btn-menu {
+        
+        display: block;
+        width: 100%;
+        padding: 20px;
+        font-size: 20px;
+        background-color: #3498db;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+    
+    .btn-menu:hover {
+        background-color: #2980b9;
+    }
+     #main {
+        width: 80%;
+        overflow-x: hidden;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+
+<div id="wrapper">
+    {% include "student/sidebar.html" %}
+    <div id="main">
+    <div class="visible-md visible-xs visible-sm mobile-menu">
+        <button type="button" class="btn btn-default btn-sm" data-toggle="offcanvas">
+            <i class="fa fa-bars"></i>
+        </button>
+    </div>
+<section>
+
+    <!-- Container for the buttons -->
+    <div class="menu-container" style="margin-top: 50px;">
+        <div class="menu-item">
+            <a href="{% url 'studentAttendance' %}" class="btn btn-menu">View Attendance </a>
+        </div>
+    </div>
+</section>
+</div>
+</div>
+{% endblock bodyContent %}

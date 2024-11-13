@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Configure Sem{% endblock title %}
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    td {
+        color: #333;
+    }
+     #main {
+        width: 80%;
+        overflow-x: hidden;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+
+<div id="wrapper">
+    {% include "teacher/sidebar.html" %}
+    <div id="main">
+        <div class="visible-md visible-xs visible-sm mobile-menu">
+            <button type="button" class="btn btn-default btn-sm" data-toggle="offcanvas">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        <section class="section" style="margin-left: 20px;">
+    <div class="container-table">
+        <h2 style="text-align: center; font-weight: bold;">Current Subjects for Semester  {{sem_no}}</h2>
+        {% if tt_exists %}
+        <a class="btn btn-primary" href="{% url 'teacherTimetableViewEdit' class_id sem_no  %}" > View Time Table </a>
+        {% elif tt_set %}
+        <a class="btn btn-primary" href="{% url 'teacherTimetableGen' class_id sem_no  %}" > Make Time Table </a>
+        {% else %}
+        <div class="row" id="tt_Form" style="display: none;">
+            <form action="{% url 'teachersetTimetable' class_id sem_no  %}" method="post">
+                {% csrf_token %}
+                        <div class="form-group col-md-2">
+                            <input type="date" name="start" id="start" required>
+                        </div>
+                        <div class="form-group col-md-2" >
+                                <input type="date" name="end" id="end" required>
+                                
+                            </div>
+                            <button class="btn btn-success col-md-2 mx-2" name="action" value="assign" type="submit">Set Dates</button>
+                            <button id="hide_Form" class="btn btn-danger col-md-2 mx-2" type="button">Cancel</button>
+                           
+                </form>
+            </div>
+        <a class="btn btn-primary col-md-3" id="show_Form" href="" > Set Time Table </a>
+        {% endif %}
+        {% if assigned_list %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Sl</th>
+                    <th>Subject</th>
+                    <th>Faculty</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for assigned in assigned_list %}
+                <form action="{% url 'teacherEditAssignSub' class_id sem_no  assigned.id %}" method="post">
+                    {% csrf_token %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        <div class="form-group">
+                            <select  name="sid" class="form-control" id="sid" required>
+                                <option value="{{ assigned.sub_id.id }}" selected hidden>
+                                    {{ assigned.sub_id }}
+                                </option>
+                                {% for sub in sub_list %}
+                                <option value="{{ sub.id }}">{{ sub }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                       <div class="form-group" >
+                                        <select  name="tid" class="form-control" id="tid" required>
+                                            <option value="{{ assigned.teacher_id.id }}" selected hidden>
+                                                {{ assigned.teacher_id }}
+                                            </option>
+                                            {% for teacher in teacher_list %}
+                                            <option value="{{ teacher.id }}">{{ teacher }} ({{teacher.department_id}})</option>
+                                            {% endfor %}
+                                        </select>
+
+                                    </di>
+                    </td>
+                    <td><button type="submit" class="btn text-success">Update</button>
+                    <a class="text-danger btn" onclick="return confirm('Remove {{assigned}}?');"" href="{% url 'teacherDelAssigned' assigned.id %}">Delete</a></td>
+                </tr>
+            </form>
+                {% endfor %}
+                <tr>
+                    <th>Add New Row</th>
+                    
+                    <form action="{% url 'teacherAssignSub' class_id sem_no %}" method="post">
+                        {% csrf_token %}
+                        <td>
+                                <div class="form-group">
+                                    <select  name="sid" class="form-control" id="sid" required>
+                                        <option value="" selected disabled hidden>
+                                            Subject
+                                        </option>
+                                        {% for sub in sub_list %}
+                                        <option value="{{ sub.id }}">{{ sub }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                    <div class="form-group" >
+                                        <select  name="tid" class="form-control" id="tid" required>
+                                            <option value="" selected disabled hidden>
+                                               
+                                                Select Teacher
+                                            </option>
+                                            {% for teacher in teacher_list %}
+                                            <option value="{{ teacher.id }}">{{ teacher }} ({{teacher.department_id}})</option>
+                                            {% endfor %}
+                                        </select>
+
+                                    </div>
+                                </td>
+                                <td>
+                                    <button class="btn btn-success" name="action" value="assign" type="submit">Assign</button>
+                                </td>
+                        </form>
+                       
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Sl</th>
+                    <th>Subject</th>
+                    <th>Faculty</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+        <tr>
+            <th>Add New Row</th>
+            
+            <form action="{% url 'teacherAssignSub' class_id sem_no %}" method="post">
+                {% csrf_token %}
+                <td>
+                        <div class="form-group">
+                            <select  name="sid" class="form-control" id="sid" required>
+                                <option value="" selected disabled hidden>
+                                    Subject
+                                </option>
+                                {% for sub in sub_list %}
+                                <option value="{{ sub.id }}">{{ sub }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                            <div class="form-group" >
+                                <select  name="tid" class="form-control" id="tid" required>
+                                    <option value="" selected disabled hidden>
+                                       
+                                        Select Teacher
+                                    </option>
+                                    {% for teacher in teacher_list %}
+                                    <option value="{{ teacher.id }}">{{ teacher }} ({{teacher.department_id}})</option>
+                                    {% endfor %}
+                                </select>
+
+                            </div>
+                        </td>
+                        <td>
+                            <button class="btn btn-success" name="action" value="assign" type="submit">Assign</button>
+                        </td>
+                </form>
+               
+            </td>
+        </tr>
+    </tbody>
+</table>
+        {% endif %}
+    </div>
+</section>
+
+    </div>
+</div>
+<script>
+    // Function to show the timetable form
+    document.getElementById('show_Form').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default link behavior
+        document.getElementById('tt_Form').style.display = 'block'; // Show the form
+        this.style.display = 'none';
+    });
+
+    // Function to hide the timetable form
+    document.getElementById('hide_Form').addEventListener('click', function() {
+        document.getElementById('tt_Form').style.display = 'none'; // Hide the form
+        document.getElementById('show_Form').style.display = 'block';
+    });
+</script>
+{% endblock bodyContent %}
+
+

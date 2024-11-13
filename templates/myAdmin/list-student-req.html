@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Students Requests List{% endblock title %}
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    td {
+        color: #333;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+{% include "myAdmin/navbar.html" %}
+<section class="section">
+    <div class="container-table">
+        <a class="btn btn-primary" href="{% url 'adminStudentList' %}">Back</a>
+
+        {% if student_list %}
+        <h1>Student Request List</h1>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <button type="button" class="btn btn-primary" id="select-all">Select All</button>
+            <button type="submit" onclick="return confirm('Approve selected students?');" name="action" value="verify" class="btn btn-success">Verify Selected</button>
+            <button type="submit" onclick="return confirm('Remove selected students?');" name="action" value="delete" class="btn btn-danger">Delete Selected</button>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Sl</th>
+                        <th>Full Name</th>
+                        <th>Course</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in student_list %}
+                    <tr>
+                        <td><input type="checkbox" value="{{ student.id }}" name="student_ids"></td>
+                        <td>{{forloop.counter}}</td>
+                        <td>{{ student.fname }} {{ student.lname }}</td>
+                        <td>{{ student.course_id.short_name }}</td>
+                        <td><a style="margin: 5px;" href="{% url 'adminStudentReqInfo' student.id %}" class="btn btn-primary col-md-5">View</a>
+                           
+                                <input type="hidden" name="deleteId" value="{{student.id}}">
+                                <button style="margin: 5px;"  type="submit" name="action" value="deleteOne" onclick="return confirm('Remove {{student.fname}} {{ student.lname }}?');" class="col-md-5 btn btn-danger">Delete</button>
+                          
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </form>
+        {% else %}
+        <h1 style="color: red; font-size: 30px; text-align: center;">No pending student requests </h1>
+        {% endif %}
+    </div>
+</section>
+<script>
+    document.getElementById('select-all').addEventListener('click', function() {
+        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        var allChecked = Array.from(checkboxes).every(function(checkbox) {
+            return checkbox.checked;
+        });
+
+        // Toggle the check state
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = !allChecked;
+        });
+
+        // Change the button text based on the current state
+        this.textContent = allChecked ? 'Select All' : 'Unselect All';
+    });
+</script>
+{% include "footer.html" %}
+{% endblock bodyContent %}

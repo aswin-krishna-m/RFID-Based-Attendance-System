@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Timetable{% endblock title %}
+{% block headerBlock %}
+<style>
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+     #main {
+        width: 80%;
+        overflow-x: hidden;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background-color: #f4f4f4;
+    }
+    
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background-color: #fff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #007bff;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+
+    @media (max-width: 768px) {
+        th, td {
+            font-size: 14px;
+            padding: 8px;
+        }
+        
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+
+<div id="wrapper">
+    {% include "teacher/sidebar.html" %}
+    <div id="main">
+        <div class="visible-md visible-xs visible-sm mobile-menu">
+            <button type="button" class="btn btn-default btn-sm" data-toggle="offcanvas">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        <section class="section" style="margin-left: 20px;">
+            <h1>Class Timetable</h1>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time Slot</th>
+                            {% for day in days_of_week %}
+                                <th>{{ day }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for time_slot in time_slots %}
+                        <tr>
+                            <td>{{ time_slot.start_time }} - {{ time_slot.end_time }}</td>
+                            {% for day in days_of_week %}
+                            <td>
+                                <select name="{{ day }}_{{ time_slot.id }}_subject">
+                                    {% for assigned in assigned_list %}
+                                        <option value="{{ assigned.id }}">{{ assigned.sub_id.sub_title }} - {{ assigned.teacher_id }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" onclick="return confirm('Save the timetable?');" type="submit">Generate Timetable</button>
+            </form>
+            
+</section>
+</div>
+</div>
+{% endblock bodyContent %}

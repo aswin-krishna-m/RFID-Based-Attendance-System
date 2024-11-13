@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Department Info{% endblock title %}
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    td {
+        color: #333;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+{% include "myAdmin/navbar.html" %}
+<section class="section">
+    <div class="container-table">
+        <h1 id="title">Department Info</h1>
+        <div id="info-table">
+            <table >
+                <tr>
+                    <th>Department Name</th>
+                    <td>{{ dept.dept_name }}</td>
+                </tr>
+                <tr>
+                    <th>Short Name</th>
+                    <td>{{ dept.short_name }}</td>
+                </tr>
+                <tr>
+                    <th>View Teachers</th>
+                    <td><a href="{% url 'adminDeptTeacherList' dept.id %}">View Teacher List</a></td>
+                </tr>
+                <tr>
+                    <th>Created On</th>
+                    <td>{{ dept.created_on }}</td>
+                </tr>
+                <th>Action</th>
+                <td><button id="showEdit" class="btn btn-primary">Edit</button></td>
+            </tr>
+        </table>
+    </div>
+<div id="edit-table" style="display: none;">
+        <form action="" method="post">
+            {% csrf_token %}
+            <table>
+                <tr>
+            <th>Department Name</th>
+            <td>
+                    <div class="form-group">
+                        <input type="text" name="dept_name" id="dept_name" tabindex="1" class="form-control" placeholder="Department name" value="{{ dept.dept_name }}" required>
+                  </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Short Name</th>
+                <td>
+                    <div class="form-group">
+                        <input type="text" name="short_name" id="short_name" tabindex="1" class="form-control" placeholder="Short name" value="{{ dept.short_name }}" required>
+                    </div>
+                </td>
+            </tr>
+            
+        <tr style="text-align: center;">
+            <th>Action</th>
+            <td>
+                <button type="button" id="hideEdit" class="btn btn-danger">Cancel</button>
+                <button class="btn btn-success" type="submit">Update</button>
+            </td>
+        </tr>
+    </table>
+</form>
+</div>
+</div>
+</section>
+<script>
+document.getElementById("showEdit").addEventListener("click", function() {
+    document.getElementById("info-table").style.display = "none";
+    document.getElementById('title').innerHTML = "Edit Department Info";
+    document.getElementById("edit-table").style.display = "block";
+  });
+
+  document.getElementById("hideEdit").addEventListener("click", function() {
+    document.getElementById("info-table").style.display = "block";
+    document.getElementById("edit-table").style.display = "none";
+    document.getElementById('title').innerHTML = "Department Info";
+  });
+</script>
+{% include "footer.html" %}
+
+{% endblock bodyContent %}

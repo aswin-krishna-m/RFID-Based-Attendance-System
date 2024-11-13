@@ -1,0 +1,45 @@
+{% load static %}
+
+<footer class="dark footer section" {% block footerStyle %}{% endblock footerStyle %}>
+    <div class="container">
+    <div class="row">
+    <div class="col-md-3 col-md-6 col-xs-12">
+    <div class="widget">
+    <div class="widget-title">
+    <h4>About MarkIT</h4>
+    <hr>
+    </div>
+    <p>
+        Mark IT is an online attendance Management system integrating IOT to digitally mark the attendance of students via equipments like RFID Reader and tag integrated into student ID cards.
+    </p>
+    <!-- <a href="#" class="btn btn-default">Read More</a> -->
+    </div>
+    </div>
+    <div class="col-md-3 col-md-6 col-xs-12">
+    <div class="widget">
+    <div class="widget-title">
+    <h4>Contact Details</h4>
+    <hr>
+    </div>
+    <ul class="contact-details">
+    <li><i class="fa fa-link"></i> <a href="#">www.web.markit.com</a></li>
+    <li><i class="fa fa-envelope"></i> <a href="mailto:info@markit.com">infomail@markit.com</a></li>
+    <li><i class="fa fa-phone"></i> +91 8967556789</li>
+    <li><i class="fa fa-home"></i>Campus Road, Ettumanoor 686618</li>
+    </ul>
+    </div>
+    </div>
+    <div class="col-md-3 col-md-6 col-xs-12">
+    <div class="widget">
+    <div class="widget-title">
+    <h4>Links</h4>
+    <hr>
+    </div>
+    <ul class="contact-details">
+    <li><i class="fa fa-link"></i> <a href="{% url 'index' %}">Go Back Home</a></li>
+    </ul>
+    </div>
+    </div>
+    </div>
+    </div>
+    </footer>

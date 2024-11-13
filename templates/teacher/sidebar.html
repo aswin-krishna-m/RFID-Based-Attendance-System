@@ -1,0 +1,22 @@
+{% load static %}
+<div class="row-offcanvas row-offcanvas-left">
+    <div id="sidebar-fix" class="sidebar-offcanvas">
+    <div class="side-logo clearfix">
+    <a href="{% url 'teacherHome' %}"><img src="{% static 'images/logo.png' %}" style="height: auto; width: 125px;" alt=""></a>
+    </div>
+    <ul class="sidebar-nav clearfix">
+    <li class="active"><a href="{% url 'teacherHome' %}">Home</a></li>
+    <li><a href="{% url 'teacherProfile' %}">My Profile</a></li>
+    {% if teacher_info.isIncharge %}      
+        <li><a href="{% url 'teacherMyClass' %}">My Class</a></li>
+    {% endif %}
+    <li><a href="{% url 'teacherLogout' %}">Logout</a></li>
+    </ul>
+</div>
+
+
+
+
+
+
+

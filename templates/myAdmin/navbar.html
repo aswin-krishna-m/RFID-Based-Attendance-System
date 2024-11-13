@@ -1,0 +1,63 @@
+{% load static %}
+<header class="header">
+    <div class="container">
+        <div class="hovermenu ttmenu">
+            <div class="navbar navbar-default" role="navigation">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target=".navbar-collapse">
+                        <span class="sr-only"></span>
+                        <span class="fa fa-bars"></span>
+                    </button>
+                    <div class="logo">
+                <a class="navbar-brand" href="{% url 'adminHome' %}" ><img src="{% static 'images/logo.png' %}" style="height: auto; width: 125px;" alt=""></a>
+            </div>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="ttmenu-half"><a href="{% url 'adminHome' %}" >Home</a></li>
+                        <!-- <li class="ttmenu-half"><a href="page-about.html">About</a></li> -->
+                        <!-- <li class="ttmenu-half"><a href="page-contact.html">Contact</a></li> -->
+                        <!-- <li class="dropdown ttmenu-half"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Teacher <b class="fa fa-angle-down"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <div class="ttmenu-content">
+                                        <ul>
+                                            <li><a href="course-list.html">Courses List</a></li>
+                                            <li><a href="course-instructors.html">Course Instructors</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="dropdown ttmenu-half"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Student <b class="fa fa-angle-down"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <div class="ttmenu-content">
+                                        <ul>
+                                            <li><a href="course-list.html">Courses List</a></li>
+                                            <li><a href="course-instructors.html">Course Instructors</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li> -->
+                        <li class="dropdown ttmenu-half"><a href="#" data-toggle="dropdown" class="dropdown-toggle">My Account <b class="fa fa-angle-down"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <div class="ttmenu-content">
+                                        <ul>
+                                            <li><a href="{% url 'adminProfile' %}"> View Profile </a></li>
+                                            <!-- <li><a href="{% url 'adminLogout' %}"> Change Password </a></li> -->
+                                            <li><a href="{% url 'adminLogout' %}" onclick="return confirm('Are sure you want to logout?');"> Logout </a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

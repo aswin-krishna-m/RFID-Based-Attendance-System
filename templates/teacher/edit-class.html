@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Teacher's Home{% endblock title %}
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid #ddd;
+    }
+
+    th,
+    td {
+        padding: 12px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    td {
+        color: #333;
+    }
+     #main {
+        width: 80%;
+        overflow-x: hidden;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+
+<div id="wrapper">
+    {% include "teacher/sidebar.html" %}
+    <div id="main">
+    <div class="visible-md visible-xs visible-sm mobile-menu">
+        <button type="button" class="btn btn-default btn-sm" data-toggle="offcanvas">
+            <i class="fa fa-bars"></i>
+        </button>
+    </div>
+    <section class="section">
+        <div class="container-table">
+            <h1 id="title">Class Info</h1>
+            <div id="info-table">
+                <table>
+                    <tr>
+                        <th>Class Name</th>
+                        <td>S{{class.sem_number}} {{ class.course_id.short_name }}</td>
+                    </tr>
+                    {% if class.division_name %}
+                    <tr>
+                        <th>Division</th>
+                        <td>{{ class.division_name }}</td>
+                    </tr>
+                    {% endif %}
+    
+                    <tr>
+                        <th>Started Year</th>
+                        <td>{{ class.start_year }}</td>
+                    </tr>
+                    <tr>
+                        <th>Ending Year</th>
+                        <td>{{ class.end_year }}</td>
+                    </tr>
+                    <tr>
+                        <th>Current Semester</th>
+                        <td>S{{ class.sem_number }}</td>
+                    </tr>
+                    <tr>
+                        <th>Class In Charge</th>
+                        <td>
+                        {% if class.class_in_charge %}
+                        {{ class.class_in_charge }}
+                        {% else %}
+                        Not Assigned
+                        {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>View Students</th>
+                        <td>
+                        <a href="{% url 'teacherMyClassStudentList' class.id %}">View Student List</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Created On</th>
+                        <td>{{ class.created_on }}</td>
+                    </tr>
+                    {% if class.passed_out %}
+                    <tr>
+                        <th>Passed Out</th>
+                        <td>{{ class.passed_out }}</td>
+                    </tr>
+                    {% endif %}
+                    <th>Action</th>
+                    <td><button id="showEdit" class="btn btn-primary">Edit</button></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="edit-table" style="display: none;">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <table>
+                        
+                        <tr>
+                            <th>Current Semester</th>
+                            <td>
+                                <div class="form-group">
+                                    <input type="number" name="sem" id="sem" tabindex="1" class="form-control" min="1" max="{{ class.course_id.sem_count }}" placeholder="Current semester" value="{{ class.sem_number }}" required>
+                                </div>
+                            </td>
+                        </tr>
+                        {% if  class.sem_number == class.course_id.sem_count %}
+                        <tr>
+                            <th>Passed Out Status</th>
+                            <td>
+                                <div class="form-group">
+                                    <label for="Passed Out">Passed Out</label>
+                                    <input type="radio" name="passed" id="passed" value="y" {% if class.passed_out %} checked {% endif %}>
+                                    <label for="Passed Out">Yes</label>
+                                    <input type="radio" name="passed" id="passed" value="n" {% if not class.passed_out %} checked {% endif %}>
+                                    <label for="Passed Out">No</label>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        
+                        <tr style="text-align: center;">
+                            <th>Action</th>
+                            <td>
+                                <button type="button" id="hideEdit" class="btn btn-danger">Cancel</button>
+                                {% if  class.sem_number == class.course_id.sem_count %}
+                                <button class="btn btn-success" onclick="return confirm('Confirm your info?');"  type="submit">Update</button>
+                                {% else %}
+                                <button class="btn btn-success" type="submit">Update</button>
+                                {% endif %}
+                                
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </section>
+    <script>
+        document.getElementById("showEdit").addEventListener("click", function () {
+            document.getElementById("info-table").style.display = "none";
+            document.getElementById('title').innerHTML = "Edit Class Info";
+            document.getElementById("edit-table").style.display = "block";
+        });
+    
+        document.getElementById("hideEdit").addEventListener("click", function () {
+            document.getElementById("info-table").style.display = "block";
+            document.getElementById("edit-table").style.display = "none";
+            document.getElementById('title').innerHTML = "Class Info";
+        });
+        
+        document.getElementById("course").addEventListener("change", function () { 
+            let selectedOption = this.options[this.selectedIndex];
+            let semCount = selectedOption.getAttribute('data-sem-count');
+            document.getElementById("sem").setAttribute('max', semCount);
+    
+            let start_year = document.getElementById("start").value
+            let maxYear = parseInt(start_year)+parseInt(semCount/2);
+            console.log(maxYear)
+            document.getElementById("end").setAttribute('max',maxYear);
+        });
+    </script>
+</div>
+</div>
+{% endblock bodyContent %}

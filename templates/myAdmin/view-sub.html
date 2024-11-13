@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Sub Info{% endblock title %}
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid #ddd;
+    }
+
+    th,
+    td {
+        padding: 12px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    td {
+        color: #333;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+{% include "myAdmin/navbar.html" %}
+<section class="section">
+    <div class="container-table">
+        <h1 id="title">Subject Info</h1>
+        <div id="info-table">
+            <table>
+                <tr>
+                    <th>Subject Name</th>
+                    <td>{{ sub.sub_title }}</td>
+                </tr>
+                <tr>
+                    <th>Code</th>
+                    <td>{{ sub.code }}</td>
+                </tr>
+               
+                <tr>
+                    <th>Course</th>
+                    <td>{{ sub.course_id.short_name }}</td>
+                </tr>
+                <th>Action</th>
+                <td><button id="showEdit" type="button" class="btn btn-primary">Edit</button></td>
+                </tr>
+            </table>
+        </div>
+        <div id="edit-table" style="display: none;">
+            <form action="" method="post">
+                {% csrf_token %}
+                <table>
+                    <tr>
+                        <th>Course</th>
+                        <td>
+                            <div class="form-group">
+                                <select name="course" class="form-control" id="course" required>
+                                    <option value="{{ sub.course_id.id }}" selected hidden>{{sub.course_id }}</option>
+                                    {% for course in course_list %}
+                                        <option  data-sem-count="{{course.sem_count}}" value="{{ course.id }}">{{ course }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <th>Title</th>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" name="title" id="title" tabindex="1" class="form-control" placeholder="Subject title" value="{{ sub.sub_title }}" required>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Code</th>
+                        <td>
+                            <div class="form-group">
+                                <input type="text" name="code" id="code" tabindex="1" class="form-control" placeholder="Course code" value="{{ sub.code }}" required>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr style="text-align: center;">
+                        <th>Action</th>
+                        <td>
+                            <button type="button" id="hideEdit" class="btn btn-danger">Cancel</button>
+                            <button class="btn btn-success" type="submit">Update</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+    document.getElementById("showEdit").addEventListener("click", function () {
+        document.getElementById("info-table").style.display = "none";
+        document.getElementById('title').innerHTML = "Edit Subject Info";
+        document.getElementById("edit-table").style.display = "block";
+    });
+
+    document.getElementById("hideEdit").addEventListener("click", function () {
+        document.getElementById("info-table").style.display = "block";
+        document.getElementById("edit-table").style.display = "none";
+        document.getElementById('title').innerHTML = "Subject Info";
+    });
+    
+    
+    document.getElementById("course").addEventListener("change", function () { 
+        let selectedOption = this.options[this.selectedIndex];
+        let semCount = selectedOption.getAttribute('data-sem-count');
+        document.getElementById("sem1").setAttribute('max', semCount);
+        document.getElementById("sem2").setAttribute('max', semCount);
+    });
+    
+</script>
+{% include "footer.html" %}
+
+{% endblock bodyContent %}

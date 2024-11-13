@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Class Attendance{% endblock title %}
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    td {
+        color: #333;
+    }
+    .filter-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    select {
+        padding: 10px;
+        font-size: 14px;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+{% include "myAdmin/navbar.html" %}
+<section class="section">
+    <div class="container-table">
+        <h1>Class Attendance</h1>
+
+        <!-- Semester Selection Form -->
+        <form method="POST">
+            {% csrf_token %}
+            <label for="semester">Select Semester:</label>
+            <select id="semester" name="semester" required>
+                <option value="" disabled selected>Select Semester</option>
+                {% for sem in semesters %}
+                    <option value="{{ sem }}" {% if selected_sem == sem %}selected{% endif %}>Semester {{ sem }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-primary" type="submit">View Attendance</button>
+        </form>
+
+        <!-- Display attendance data only if semester is selected -->
+        {% if students %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        {% for subject in subjects %}
+                            <th>{{ subject.sub_id.sub_title }}</th>
+                        {% endfor %}
+                        <th>Total Attendance (%)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                        <tr>
+                            <td>{{ student.fname }} {{ student.lname }}</td>
+                            {% for attendance in student.attendance %}
+                                <td>{{ attendance }}%</td>
+                            {% endfor %}
+                            <td>{{ student.total_attendance }}%</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Please select a semester to view attendance.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock bodyContent %}

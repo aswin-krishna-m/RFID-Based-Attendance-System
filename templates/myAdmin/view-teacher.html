@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Teacher Info{% endblock title %}
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    td {
+        color: #333;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+{% include "myAdmin/navbar.html" %}
+<section class="section">
+    <div class="container-table">
+
+        <h1 id="title">Teacher Info</h1>
+        <div id="info-table">
+            <table >
+                <tr>
+                    <th>Full Name</th>
+                    <td>{{ teacher.fname }} {{ teacher.lname }}</td>
+                </tr>
+                <tr>
+                    <th>Department</th>
+                    <td>{% if teacher.department_id %}
+                        {{ teacher.department_id }}
+                    {% else %}
+                    Not assigned to any department
+                    {% endif %}</td>
+                </tr>
+                <tr>
+                        <th>DOB</th>
+                    <td>{{ teacher.dob|date:'F d, Y' }}</td>
+                </tr>
+                <tr>
+                        <th>Gender</th>
+                    <td>{{teacher.gender }}</td>
+                </tr>
+                <tr>
+                        <th>Email</th>
+                    <td>{{teacher.email }}</td>
+                </tr>
+                <tr>
+                    <th>Phone</th>
+                    <td>{{teacher.phone }}</td>
+                </tr>
+                <tr>
+                    <th>Password</th>
+                    <td>{{teacher.password }}</td>
+                </tr>
+                <tr>
+                    <th>Created on</th>
+                    <td>{{teacher.created_on }}</td>
+                </tr>
+                <tr>
+                    <th>Class Teacher</th>
+                    <td>{% if teacher.isIncharge %}      
+                        <a href="{% url 'adminClassInfo' cid.id %}">{{cid}}</a>
+                        {% else %}
+                        No
+                    {% endif %}
+                </td>
+                </tr>
+                <tr>
+                    <th>View Subjects</th>
+                    <td>{% if sub_list %}     
+                        {% for sub in sub_list %}
+                        <a href="{% url 'adminSubInfo' sub.sub_id.id %}">{{sub.sub_id}}</a><br>
+                        {% endfor %} 
+                        {% else %}
+                        No Subject Assigned
+                    {% endif %}
+                </td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        {% if teacher.stts %}
+                            Verified
+                        {% else %}
+                        Pending
+                        {% endif %}
+                    </td>
+                </tr> 
+            <tr>
+                <th>Action</th>
+                <td><button id="showEdit" class="btn btn-primary">Edit</button></td>
+            </tr>
+        </table>
+    </div>
+<div id="edit-table" style="display: none;">
+        <form action="" method="post">
+            {% csrf_token %}
+            <table>
+                <tr>
+            <th>First Name</th>
+            <td>
+                    <div class="form-group">
+                        <input type="text" name="fname" id="fname" tabindex="1" class="form-control" placeholder="First name" value="{{ teacher.fname }}" required>
+                  </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Last Name</th>
+                <td>
+                    <div class="form-group">
+                        <input type="text" name="lname" id="lname" tabindex="1" class="form-control" placeholder="Last name" value="{{ teacher.lname }}" required>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Department</th>
+                <td>
+                    <div class="form-group">
+                    <select name="dept"  class="form-control" id="dept" required >
+                        <option value="{{ teacher.department_id.id }}" selected hidden>{{ teacher.department_id }}</option>
+                        {% for dept in dept_list %}
+                        <option value="{{ dept.id }}">{{ dept }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+             </td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td>
+                    <div class="form-group">
+                      <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email" value="{{teacher.email }}" required>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Phone</th>
+                <td>
+                    <div class="form-group">
+                      <input type="text" name="phone" id="phone" maxlength="10" tabindex="1" pattern="[0-9]{10}" title="Ten Digit Phone Number" class="form-control" placeholder="Phone Number" value="{{teacher.phone }}" required>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>DOB</th>
+                <td>
+                    <div class="form-group">
+                      <input type="date" name="dob" id="dob" tabindex="1" title="Enter valid date of birth" class="form-control" placeholder="Date of Birth" value="{{ teacher.dob|date:'Y-m-d' }}" required>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Gender</th>
+                <td>
+                    <div class="form-group">
+                        <select name="gender"  class="form-control" id="gender" required >
+                            <option value="{{ teacher.gender }}" selected hidden>{{ teacher.gender }}</option>
+                            <option value="MALE">MALE</option>
+                            <option value="FEMALE">FEMALE</option>
+                            <option value="OTHERS">OTHERS</option>
+                        </select>                    
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Password</th>
+                <td>
+                    <div class="form-group">
+                        <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password" value="{{teacher.password }}" required>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>
+                    <div class="form-group">
+                    <select name="stts"  class="form-control" id="stts" required >
+                    <option value="{{ teacher.stts }}" selected hidden > {% if teacher.stts %}
+                        Verified
+                    {% else %}
+                        Unverify
+                    {% endif %}</option>
+                    <option value="0">Unverify</option>
+                    <option value="1">Verify</option>
+                    </select>
+                </div>
+                </td>
+            </tr> 
+        <tr style="text-align: center;">
+            <th>Action</th>
+            <td>
+                <button type="button" id="hideEdit" class="btn btn-danger">Cancel</button>
+                <button class="btn btn-success" type="submit">Update</button>
+            </td>
+        </tr>
+    </table>
+</form>
+</div>
+</div>
+</section>
+<script>
+document.getElementById("showEdit").addEventListener("click", function() {
+    document.getElementById("info-table").style.display = "none";
+    document.getElementById('title').innerHTML = "Edit Teacher Info";
+    document.getElementById("edit-table").style.display = "block";
+  });
+
+  document.getElementById("hideEdit").addEventListener("click", function() {
+    document.getElementById("info-table").style.display = "block";
+    document.getElementById("edit-table").style.display = "none";
+    document.getElementById('title').innerHTML = "Teacher Info";
+  });
+</script>
+{% include "footer.html" %}
+{% endblock bodyContent %}

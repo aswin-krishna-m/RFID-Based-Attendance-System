@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Choose Subjects{% endblock title %}
+{% block headerBlock %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    .container-table {
+        max-width: 1000px;
+        margin: 0 auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    table, th, td {
+        border: 1px solid #ddd;
+    }
+    th, td {
+        padding: 12px;
+        text-align: left;
+    }
+    th {
+        background-color: #4CAF50;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    tr:hover {
+        background-color: #ddd;
+    }
+    td {
+        color: #333;
+    }
+     #main {
+        width: 80%;
+        overflow-x: hidden;
+    }
+</style>
+{% endblock headerBlock %}
+{% block bodyContent %}
+
+<div id="wrapper">
+    {% include "teacher/sidebar.html" %}
+    <div id="main">
+        <div class="visible-md visible-xs visible-sm mobile-menu">
+            <button type="button" class="btn btn-default btn-sm" data-toggle="offcanvas">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        <section class="section" style="margin-left: 20px;">
+    <div class="container-table">
+        <h2 style="text-align: center; font-weight: bold;">CHOOSE SUBJECT</h2>
+        <form method="POST" action="">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="sem">Select Semester:</label>
+                <select name="sem" id="sem" class="form-control">
+                    {% for i in sem_count %}
+                        <option value="{{ i }}">Semester {{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Show Attendance</button>
+        </form>
+        {% if sub_list %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>View Attendance</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sub in sub_list %}
+                <tr>
+                    <td>{{ sub.sub_id.sub_title }}</td>
+                    <td><a href="{% url 'teacherAttendanceStud' sub.class_id.id sub.sub_id.id %}">View Attendance</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <h1 style="color: red; font-size: 30px; text-align: center;">No data available</h1>
+        {% endif %}
+    </div>
+</section>
+    </div>
+</div>
+{% endblock bodyContent %}
+
+

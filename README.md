@@ -89,11 +89,34 @@ The **Student Module** provides a straightforward interface for students to mana
 
 ## Screenshots
 
-   - **Admin Module**: 
+### Admin Module
+#### Admin Home
+![Admin Home](screenshots/admin_home.png)
+#### Attendance View
+![Attendance View](screenshots/admin_attendance_view.png)
 
-   - **Teacher Module**: 
+### Common Module
+#### Common Home Page
+![Common Home](screenshots/common_home.png)
 
-   - **Student Module**: 
+### Student Module
+#### Student Login
+![Student Login](screenshots/stud_login.png)
+#### Student Home
+![Student Home](screenshots/stud-home.png)
+#### Student Attendance
+![Student Attendance](screenshots/stud-attendance.png)
+
+### Teacher Module
+#### Teacher Home
+![Teacher Home](screenshots/teacher_home.png)
+#### Semester Setup
+![Semester Setup](screenshots/teacher_sem_setup.png)
+#### Student Management
+![Student Management](screenshots/teacher_stud_mgmt.png)
+#### View Timetable
+![View Timetable](screenshots/teacher_view_timetable.png)
+
 
 
 ---
@@ -110,8 +133,4 @@ The **Student Module** provides a straightforward interface for students to mana
 3. **Student Login**:
    - Students can register, log in, view attendance records, and mark their attendance using RFID.
 
----
-
-## Contributing
-Feel free to fork the repository, submit issues, and make pull requests to enhance the functionality of this RFID-based attendance system.
 ---
